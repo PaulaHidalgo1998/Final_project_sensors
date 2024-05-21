@@ -1,34 +1,100 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>MQTT over WebSocket demo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" />
+    <title>WebSocket demo</title>
 </head>
-<body>
+    <body>
+        <div id="page">
+		
+            <div id="header">
+                <h1>This is your first webpage!</h1>
+                <h2>Display a variable from your Raspberry to websocket</h2>
+                
+            </div>
 
-    <script type="text/javascript" src="mqttws31.js"></script>
-    <script>
-        var client = new Paho.MQTT.Client(location.hostname, Number(location.port), "clientId");
-        client.onConnectionLost = onConnectionLost;
-        client.onMessageArrived = onMessageArrived;
-        client.connect({onSuccess:onConnect});
+            <div id="input">
+                <h2>This is the Output division</h2>
+                <input id='setpoint' type="range" class="input-knob" 
+                 min="0" max="100" style="width:300px;"/>
+                <p style="font-size: large;">Setpoint value:
+                    <output id="value"></output>
+                </p>
+                <br>
+                <h2>This is the Input division</h2>
+                <input id='setpoint_in' type="range" class="input-knob" 
+                 min="0" max="100" style="width:300px;"/>
+                <p style="font-size: large;">Setpoint value:
+                    <output id="value_in"></output>
+                </p>
+            </div>
+            <script type="text/javascript" src="mqttws31.js"></script>
+            <script>
+                var client_time = new Paho.Client("10.5.3.101", 15677, "time");
+                client_time.onConnectionLost = onConnectionLost_time;
+                client_time.onMessageArrived = onMessageArrived_time;
+                client_time.connect({onSuccess:onConnect_time, cleanSession:true, keepAliveInterval:10});
 
-        function onConnect() {
-            // Once a connection has been made, make a subscription and send a message.
-            console.log("onConnect");
-            client.subscribe("/World");
-            var message = new Paho.MQTT.Message("Hello");
-            message.destinationName = "/World";
-            client.send(message);
-        };
-        function onConnectionLost(responseObject) {
-            if (responseObject.errorCode !== 0)
-            console.log("onConnectionLost:"+responseObject.errorMessage);
-        };
-        function onMessageArrived(message) {
-            console.log("onMessageArrived:"+message.payloadString);
-            client.disconnect();
-        };
-    </script>
-</body>
+                var client_rand = new Paho.Client("10.5.3.101", 15677, "rand");
+                client_rand.onConnectionLost = onConnectionLost_rand;
+                client_rand.onMessageArrived = onMessageArrived_rand;
+                client_rand.connect({onSuccess:onConnect_rand, cleanSession:true, keepAliveInterval:10});
+
+                var client_send = new Paho.Client("10.5.3.101", 15677, "send");
+                client_rand.onConnectionLost = onConnectionLost_send;
+                client_send.connect({onSuccess:onConnect_send, cleanSession:true, keepAliveInterval:10});
+
+
+                function onConnect_time() {
+                    // Once a connection has been made, make a subscription and send a message.
+                    console.log("onConnect_time");
+                    client_time.subscribe("data/time");
+                };
+                function onConnectionLost_time(responseObject) {
+                    if (responseObject.errorCode !== 0){
+                        console.log("onConnectionLost_time:"+responseObject.errorMessage);
+                    }
+                };
+                function onMessageArrived_time(message) {
+                    document.getElementById("value").value = message.payloadString;
+                    console.log("onMessageArrived_time:"+message.payloadString);
+                };
+
+                function onConnect_rand() {
+                    // Once a connection has been made, make a subscription and send a message.
+                    console.log("onConnect_rand");
+                    client_rand.subscribe("data/rand_num");
+                };
+                function onConnectionLost_rand(responseObject) {
+                    if (responseObject.errorCode !== 0){
+                        console.log("onConnectionLost_rand:"+responseObject.errorMessage);
+                    }
+                };
+                function onMessageArrived_rand(message) {
+                    document.getElementById("setpoint").value = message.payloadString;
+                    console.log("onMessageArrived_rand:"+message.payloadString);
+                };
+
+                async function onConnect_send() {
+                    while (true){
+                        var msg = new Paho.Message(document.getElementById("setpoint_in").value);
+                        document.getElementById("value_in").value = document.getElementById("setpoint_in").value
+                        
+                        msg.destinationName="data/slider";
+                        client_send.send(msg);
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        
+                    }
+                };
+                function onConnectionLost_send(responseObject) {
+                    if (responseObject.errorCode !== 0){
+                        console.log("onConnectionLost_time:"+responseObject.errorMessage);
+                    }
+                };
+                
+            </script>
+        </div>
+    </body>
 </html>
+
