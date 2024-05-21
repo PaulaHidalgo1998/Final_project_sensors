@@ -35,7 +35,7 @@ void sendData() {
   if (flagSend == false) {
     valueSend = motorSpeed;
     flagSend = true;
-  } else 
+  } else {
     valueSend = speedReference;
     flagSend = false;
   }

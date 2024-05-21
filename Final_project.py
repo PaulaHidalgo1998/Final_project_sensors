@@ -7,15 +7,16 @@ import random
 
 import smbus
 import time
+
 # for RPI version 1, use bus = smbus.SMBus(0)
 bus = smbus.SMBus(1)
 # This is the address we setup in the Arduino Program
 address = 0x09
 
 #Setting the broker IP address
-host= "10.5.1.144"
+host= "10.5.3.101"
 # Setting the broker port
-port=12883
+port=15675
 
 client_pubRef = mqtt.Client()
 client_pubSpeed = mqtt.Client()
@@ -39,16 +40,18 @@ def writeNumber(value):
     
 def readNumber():
     motorSpeed = bus.read_byte(address)
-    time.sleep(0.001)
+    time.sleep(0.1)
     print(motorSpeed)
     speedReference = bus.read_byte(address)
+    time.sleep(0.1)
     print(speedReference)
     return motorSpeed, speedReference
 
 def main():
     print("Enter a value between 1 and 120:")
     while True:
-        motorSpeed, speedReference = readNumber
+        motorSpeed, speedReference = readNumber()
+
         client_pubRef.publish("data/reference", speedReference)
         client_pubSpeed.publish("data/speed", motorSpeed)
         client_subSetpoint.on_message=sub_set_point_clbk
