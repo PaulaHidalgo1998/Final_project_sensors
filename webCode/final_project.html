@@ -24,64 +24,63 @@
                 <br>
                 <h2>This is the Input division</h2>
                 <input id='setpoint_in' type="range" class="input-knob" 
-                 min="0" max="100" style="width:300px;"/>
+                 min="0" max="120" style="width:300px;"/>
                 <p style="font-size: large;">Setpoint value:
                     <output id="value_in"></output>
                 </p>
             </div>
             <script type="text/javascript" src="mqttws31.js"></script>
             <script>
-                var client_time = new Paho.Client("10.5.3.101", 15677, "time");
-                client_time.onConnectionLost = onConnectionLost_time;
-                client_time.onMessageArrived = onMessageArrived_time;
-                client_time.connect({onSuccess:onConnect_time, cleanSession:true, keepAliveInterval:10});
+                var client_Speed = new Paho.Client("10.5.3.101", 15677, "speed");
+                client_Speed.onConnectionLost = onConnectionLost_speed;
+                client_Speed.onMessageArrived = onMessageArrived_speed;
+                client_Speed.connect({onSuccess:onConnect_speed, cleanSession:true, keepAliveInterval:10});
 
-                var client_rand = new Paho.Client("10.5.3.101", 15677, "rand");
-                client_rand.onConnectionLost = onConnectionLost_rand;
-                client_rand.onMessageArrived = onMessageArrived_rand;
-                client_rand.connect({onSuccess:onConnect_rand, cleanSession:true, keepAliveInterval:10});
+                function onConnect_speed() {
+                    // Once a connection has been made, make a subscription and send a message.
+                    console.log("onConnect_speed");
+                    client_Speed.subscribe("data/speed");
+                };
+                function onConnectionLost_speed(responseObject) {
+                    if (responseObject.errorCode !== 0){
+                        console.log("onConnectionLost_speed:"+responseObject.errorMessage);
+                    }
+                };
+                function onMessageArrived_speed(message) {
+                    document.getElementById("value").value = message.payloadString;
+                    console.log("onMessageArrived_speed:"+message.payloadString);
+                };
+
+                var client_reference = new Paho.Client("10.5.3.101", 15677, "reference");
+                client_reference.onConnectionLost = onConnectionLost_reference;
+                client_reference.onMessageArrived = onMessageArrived_reference;
+                client_reference.connect({onSuccess:onConnect_reference, cleanSession:true, keepAliveInterval:10});
+
+                function onConnect_reference() {
+                    // Once a connection has been made, make a subscription and send a message.
+                    console.log("onConnect_reference");
+                    client_reference.subscribe("data/reference");
+                };
+                function onConnectionLost_reference(responseObject) {
+                    if (responseObject.errorCode !== 0){
+                        console.log("onConnectionLost_reference:"+responseObject.errorMessage);
+                    }
+                };
+                function onMessageArrived_reference(message) {
+                    document.getElementById("setpoint").value = message.payloadString;
+                    console.log("onMessageArrived_reference:"+message.payloadString);
+                };
 
                 var client_send = new Paho.Client("10.5.3.101", 15677, "send");
-                client_rand.onConnectionLost = onConnectionLost_send;
+                client_send.onConnectionLost = onConnectionLost_send;
                 client_send.connect({onSuccess:onConnect_send, cleanSession:true, keepAliveInterval:10});
-
-
-                function onConnect_time() {
-                    // Once a connection has been made, make a subscription and send a message.
-                    console.log("onConnect_time");
-                    client_time.subscribe("data/time");
-                };
-                function onConnectionLost_time(responseObject) {
-                    if (responseObject.errorCode !== 0){
-                        console.log("onConnectionLost_time:"+responseObject.errorMessage);
-                    }
-                };
-                function onMessageArrived_time(message) {
-                    document.getElementById("value").value = message.payloadString;
-                    console.log("onMessageArrived_time:"+message.payloadString);
-                };
-
-                function onConnect_rand() {
-                    // Once a connection has been made, make a subscription and send a message.
-                    console.log("onConnect_rand");
-                    client_rand.subscribe("data/rand_num");
-                };
-                function onConnectionLost_rand(responseObject) {
-                    if (responseObject.errorCode !== 0){
-                        console.log("onConnectionLost_rand:"+responseObject.errorMessage);
-                    }
-                };
-                function onMessageArrived_rand(message) {
-                    document.getElementById("setpoint").value = message.payloadString;
-                    console.log("onMessageArrived_rand:"+message.payloadString);
-                };
 
                 async function onConnect_send() {
                     while (true){
                         var msg = new Paho.Message(document.getElementById("setpoint_in").value);
                         document.getElementById("value_in").value = document.getElementById("setpoint_in").value
                         
-                        msg.destinationName="data/slider";
+                        msg.destinationName="data/setpoint";
                         client_send.send(msg);
                         await new Promise(resolve => setTimeout(resolve, 1000));
                         
