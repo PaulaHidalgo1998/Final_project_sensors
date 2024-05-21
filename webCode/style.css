@@ -22,7 +22,7 @@ body {
 #page
 {
   margin: 0 auto 0 auto; 
-  display: block; 
+  /* display: block;  */
   height:auto;
   position: relative; 
   overflow: hidden; 

@@ -31,8 +31,8 @@ client_subSetpoint.loop_start()
 
 
 def sub_set_point_clbk (client, userdata, message):
-    writeNumber(int(setpoint))
-    print("Hi Arduino, I sent you ",setpoint)
+    writeNumber(int(message.payload))
+    print("Hi Arduino, I sent you ",message.payload)
 
 def writeNumber(value):
     bus.write_byte(address, value)
@@ -40,10 +40,10 @@ def writeNumber(value):
     
 def readNumber():
     motorSpeed = bus.read_byte(address)
-    time.sleep(0.1)
+    time.sleep(1)
     print(motorSpeed)
     speedReference = bus.read_byte(address)
-    time.sleep(0.1)
+    time.sleep(1)
     print(speedReference)
     return motorSpeed, speedReference
 

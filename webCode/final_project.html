@@ -17,7 +17,7 @@
             <div id="input">
                 <h2>This is the Output division</h2>
                 <input id='setpoint' type="range" class="input-knob" 
-                 min="0" max="100" style="width:300px;"/>
+                 min="0" max="120" style="width:300px;"/>
                 <p style="font-size: large;">Setpoint value:
                     <output id="value"></output>
                 </p>
@@ -30,6 +30,7 @@
                 </p>
             </div>
             <script type="text/javascript" src="mqttws31.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
                 var client_Speed = new Paho.Client("10.5.3.101", 15677, "speed");
                 client_Speed.onConnectionLost = onConnectionLost_speed;
@@ -48,7 +49,8 @@
                 };
                 function onMessageArrived_speed(message) {
                     document.getElementById("value").value = message.payloadString;
-                    console.log("onMessageArrived_speed:"+message.payloadString);
+                    //console.log("onMessageArrived_speed:"+message.payloadString);
+                    addData(message.payloadString, 0)
                 };
 
                 var client_reference = new Paho.Client("10.5.3.101", 15677, "reference");
@@ -68,7 +70,8 @@
                 };
                 function onMessageArrived_reference(message) {
                     document.getElementById("setpoint").value = message.payloadString;
-                    console.log("onMessageArrived_reference:"+message.payloadString);
+                    //console.log("onMessageArrived_reference:"+message.payloadString);
+                    addData(message.payloadString, 1)
                 };
 
                 var client_send = new Paho.Client("10.5.3.101", 15677, "send");
@@ -79,10 +82,10 @@
                     while (true){
                         var msg = new Paho.Message(document.getElementById("setpoint_in").value);
                         document.getElementById("value_in").value = document.getElementById("setpoint_in").value
-                        
+                        console.log("onMessageArrived_reference:"+msg.payloadString);
                         msg.destinationName="data/setpoint";
                         client_send.send(msg);
-                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        await new Promise(resolve => setTimeout(resolve, 1220));
                         
                     }
                 };
@@ -93,6 +96,9 @@
                 };
                 
             </script>
+            <h1>Dynamic Chart</h1>
+            <canvas id="myChart" stile="box-sizing: border-box; height: 376px; width: 753px; display: contents !important"></canvas>
+            <script src="chart_motor.js"></script>
         </div>
     </body>
 </html>
