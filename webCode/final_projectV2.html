@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" />
+    <title>WebSocket demo</title>
+</head>
+    <body>
+        <div id="page">
+		
+            <div id="header">
+                <h1>This is your first webpage!</h1>
+                <h2>Display a variable from your Raspberry to websocket</h2>
+                
+            </div>
+
+            <div id="input">
+                <h2>This is the Output division</h2>
+                <input id='setpoint' type="range" class="input-knob" 
+                 min="0" max="120" style="width:300px;"/>
+                <p style="font-size: large;">Setpoint value:
+                    <output id="value"></output>
+                </p>
+                <br>
+                <h2>This is the Input division</h2>
+                <input id='setpoint_in' type="range" class="input-knob" 
+                 min="0" max="120" style="width:300px;"/>
+                <p style="font-size: large;">Setpoint value:
+                    <output id="value_in"></output>
+                </p>
+            </div>
+            <script type="text/javascript" src="mqttws31.js"></script>
+            <script type="text/javascript" src="webSocket.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            
+            <h1>Dynamic Chart</h1>
+            <canvas id="myChart" stile="box-sizing: border-box; height: 376px; width: 753px; display: contents !important"></canvas>
+            <script src="chart_motor.js"></script>
+        </div>
+    </body>
+</html>
+

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>FINAL PROJECT</title>
+
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="css/responsive.css" rel="stylesheet" />
+</head>
+
+<body class="sub_page">
+
+  <div class="hero_area">
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-11 offset-lg-1">
+            <nav class="navbar navbar-expand-lg custom_nav-container ">
+              <a class="navbar-brand" href="index.html">
+                <img src="images/logo.png" alt="">
+                <span>
+                  FINAL PROJECT
+                </span>
+              </a>              
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- end header section -->
+  </div>
+
+  <!-- about section -->
+
+  <section class="about_section layout_padding">
+    <div class="container">
+      <div class="heading_container">
+        <h2>
+          CONTROL GRAPH
+        </h2>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <div class="detail-box" style="width:75%">
+          <canvas id="myChart"></canvas>
+        </div>
+        <div class="detail-box" style="width:25%; padding: 10px;">
+          <h2>Current State</h2>
+          <p style="font-size: large;">Motor Value:
+              <output id="value"></output>
+          </p>
+          <p style="font-size: large;">Set Point Value:
+            <output id="setpoint"></output>
+          </p>
+          <br>
+          <h2>Desire State</h2>
+          <input id='desire_state' type="range" class="input-knob" 
+            min="0" max="120" style="width:300px;"/>
+          <p style="font-size: large;">Desire value:
+              <output id="desire_state_value"></output>
+          </p>
+          <div class="box img-box">
+            <div class="about_img-bg">
+              <img src="images/arduin-raspberry.webp" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- end about section -->
+  <script type="text/javascript" src="js/mqttws31.js"></script>
+  <script type="text/javascript" src="js/webSocket.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="text/javascript" src="js/chart_motor.js"></script>
+  
+  <!-- footer section -->
+  <section class="container-fluid footer_section">
+    <div class="container">
+      <p>
+        &copy; 2024 All Rights Reserved By Paula Hidalgo & Antonio Martinez
+      </p>
+    </div>
+  </section>
+  <!-- footer section -->
+
+  
+
+</body>
+
+</html>
